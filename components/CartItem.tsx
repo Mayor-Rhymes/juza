@@ -31,21 +31,22 @@ const CartItem = ({ product }: ItemProps) => {
           UGX {(product.price * product.count).toPrecision(5)}
         </Text>
         <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
-          <Ionicons
-            name="add"
-            size={10}
-            color={"white"}
-            onPress={() => addToCart(product)}
-            style={styles.itemCountButton}
-          />
-          <Text style={{ alignSelf: "flex-end", fontSize: 20 }}>
-            {product.count}
-          </Text>
           <AntDesign
             name="minus"
             size={10}
             color={"white"}
             onPress={() => removeFromCart(product)}
+            style={styles.itemCountButton}
+          />
+          <Text style={{ alignSelf: "flex-end", fontSize: 20 }}>
+            {product.count}
+          </Text>
+
+          <Ionicons
+            name="add"
+            size={10}
+            color={"white"}
+            onPress={() => addToCart(product)}
             style={styles.itemCountButton}
           />
         </View>
