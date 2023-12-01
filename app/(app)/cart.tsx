@@ -5,12 +5,20 @@ import CartItem from "../../components/CartItem";
 import Button from "../../components/Button";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import Animated, {
+  FadeInRight,
+  FadeInUp,
+  FadeOut,
+  FadeOutLeft,
+} from "react-native-reanimated";
 
 const cartImage = require("../../assets/images/empty-cart.png");
 
 const Page = () => {
-  const { cart } = useCartStore() as { cart: ProductTrack[] };
-  
+  const { cart, resetCart } = useCartStore() as {
+    cart: ProductTrack[];
+    resetCart: () => void;
+  };
 
   const getTotal = () => {
     let total = 0;
@@ -22,7 +30,11 @@ const Page = () => {
   };
   if (cart.length === 0) {
     return (
-      <View style={styles.emptyContainer}>
+      <Animated.View
+        entering={FadeInUp}
+        exiting={FadeOut}
+        style={styles.emptyContainer}
+      >
         <Image source={cartImage} style={{ height: 300, width: 300 }} />
         <Text style={{ fontSize: 20 }}>Your Cart is empty 🥲</Text>
         <Link href="/" asChild>
@@ -30,11 +42,15 @@ const Page = () => {
             <Text style={{ color: "white", fontSize: 20 }}>Go to Store</Text>
           </Button>
         </Link>
-      </View>
+      </Animated.View>
     );
   }
   return (
-    <View style={styles.container}>
+    <Animated.View
+      entering={FadeInRight}
+      exiting={FadeOutLeft}
+      style={styles.container}
+    >
       <FlashList
         data={cart}
         renderItem={({ item }) => <CartItem product={item} />}
@@ -49,31 +65,35 @@ const Page = () => {
           padding: 20,
           flexDirection: "row",
           justifyContent: "space-between",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
-        <Text style={{ fontSize: 25, color: "black", fontWeight: "600" }}>Total</Text>
-        <Text style={{ fontSize: 20, fontWeight: "600", color: "#228b22" }}>UGX {getTotal().toPrecision(5)}</Text>
+        <Text style={{ fontSize: 25, color: "black", fontWeight: "600" }}>
+          Total
+        </Text>
+        <Text style={{ fontSize: 20, fontWeight: "600", color: "#228b22" }}>
+          UGX {getTotal().toPrecision(5)}
+        </Text>
       </View>
       <View
         style={{
-          // position: "absolute",
-          // bottom: 10,
-          // left: 6,
           flexDirection: "row",
           justifyContent: "space-evenly",
           gap: 10,
           alignItems: "center",
         }}
       >
+        <Button
+          style={[styles.emptyButtonStyle, { flex: 1 }]}
+          onPress={resetCart}
+        >
+          <Text style={styles.buyButtonText}>Empty Cart</Text>
+        </Button>
         <Button style={[styles.buyButtonStyle, { flex: 1 }]}>
           <Text style={styles.buyButtonText}>Checkout</Text>
         </Button>
-        {/* <Button style={[styles.buyButtonStyle, styles.addToCartButton]}>
-          <Ionicons name="cart" color="white" size={20} />
-        </Button> */}
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -100,6 +120,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#007FFF",
   },
 
+  emptyButtonStyle: {
+    padding: 20,
+    backgroundColor: "#ED2939",
+    alignItems: "center",
+    borderRadius: 30,
+  },
   buyButtonStyle: {
     padding: 20,
     backgroundColor: "#6173F3",

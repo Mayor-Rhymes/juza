@@ -25,6 +25,7 @@ const Layout = () => {
             elevation: 10,
           },
           
+          
         }}
       >
         <Tabs.Screen

@@ -2,23 +2,33 @@ import { View, Text, StyleSheet, TextInput } from "react-native";
 import { useUserStore } from "../lib/store/user-store";
 import { Link, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import { supabase } from "../lib/supabase/main";
+import Animated, {
+  useSharedValue,
+  withRepeat,
+  withTiming,
+  useAnimatedStyle,
+  Easing,
+} from "react-native-reanimated";
+
+const duration = 2000;
+const easing = Easing.bezier(0.25, -0.5, 0.25, 1);
+
 
 const Page = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [borderColor, setBorderColor] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const user = useUserStore((state: any) => state.user);
 
   console.log(user);
   const updateUser = useUserStore((state: any) => state.updateUser);
 
   const handleSignup = async () => {
+    setLoading(true);
     const { error, data } = await supabase.auth.signUp({
       email: email,
       password: password,
@@ -27,6 +37,7 @@ const Page = () => {
     if (error) {
       console.log(data);
       console.log("problem don dey");
+      setLoading(false);
       return;
     }
 
@@ -34,12 +45,25 @@ const Page = () => {
     router.replace("/");
   };
 
-  const handleFocus = () => {
-    setBorderColor("#6173F3");
-  };
-  const handleBlur = () => {
-    setBorderColor("lightgray");
-  };
+  const sv = useSharedValue(0);
+
+  useEffect(() => {
+    sv.value = withRepeat(withTiming(1, { duration, easing }), -1);
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${sv.value * 360}deg` }],
+  }));
+
+  if (loading) {
+    return (
+      <Animated.View
+        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+      >
+        <Animated.View style={[styles.box, animatedStyle]} />
+      </Animated.View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -49,6 +73,16 @@ const Page = () => {
       </View>
 
       <View style={styles.formStyle}>
+        <Text
+          style={{
+            fontSize: 25,
+            textAlign: "center",
+            fontWeight: "600",
+            color: "#6173F3",
+          }}
+        >
+          JUZA
+        </Text>
         <TextInput
           onChangeText={(text) => setName(text)}
           style={styles.inputStyle}
@@ -142,6 +176,13 @@ const styles = StyleSheet.create({
   linkerText: {
     fontWeight: "500",
     color: "black",
+  },
+
+  box: {
+    height: 120,
+    width: 120,
+    backgroundColor: "#6173F3",
+    borderRadius: 50,
   },
 });
 

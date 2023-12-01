@@ -33,18 +33,20 @@ const CartItem = ({ product }: ItemProps) => {
         <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
           <Ionicons
             name="add"
-            size={20}
-            color={"black"}
+            size={10}
+            color={"white"}
             onPress={() => addToCart(product)}
+            style={styles.itemCountButton}
           />
           <Text style={{ alignSelf: "flex-end", fontSize: 20 }}>
             {product.count}
           </Text>
           <AntDesign
             name="minus"
-            size={20}
-            color={"black"}
+            size={10}
+            color={"white"}
             onPress={() => removeFromCart(product)}
+            style={styles.itemCountButton}
           />
         </View>
       </View>
@@ -70,6 +72,12 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     elevation: 5,
     justifyContent: "space-evenly",
+  },
+
+  itemCountButton: {
+    backgroundColor: "#6173F3",
+    padding: 4,
+    borderRadius: 5,
   },
 });
 

@@ -6,11 +6,12 @@ import { Ionicons } from "@expo/vector-icons";
 import ProductItem from "../../components/ProductItem";
 import { FlashList } from "@shopify/flash-list";
 import { products } from "../../lib/mock/fakeData";
+import Animated, { FadeIn, FadeInLeft, FadeOut } from "react-native-reanimated";
 const Page = () => {
   const user = useUserStore((state: any) => state.user);
   console.log(user);
   return (
-    <View style={styles.container}>
+    <Animated.View entering={FadeInLeft} exiting={FadeOut} style={styles.container}>
       <View style={styles.userPane}>
         <Text>Hello {user.email}</Text>
       </View>
@@ -48,7 +49,7 @@ const Page = () => {
         ItemSeparatorComponent={() => <View style={{width: 30, height: 30}}/>}
         
       />
-    </View>
+    </Animated.View>
   );
 };
 

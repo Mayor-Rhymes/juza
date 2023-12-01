@@ -6,6 +6,7 @@ import Button from "../../components/Button";
 import { Ionicons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import { useCartStore } from "../../lib/store/cart-store";
+import Animated, { FadeIn, FadeInDown, FadeOut } from "react-native-reanimated";
 
 
 const Page = () => {
@@ -41,7 +42,7 @@ const Page = () => {
     );
   }
   return (
-    <View style={styles.otherContainer}>
+    <Animated.View entering={FadeInDown} exiting={FadeOut}  style={styles.otherContainer}>
       <Image
         source={product.imagePath}
         style={{ height: 400, width: "100%", borderRadius: 20 }}
@@ -86,7 +87,7 @@ const Page = () => {
           <Ionicons name="cart" color="white" size={20} />
         </Button>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

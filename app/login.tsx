@@ -2,17 +2,26 @@ import { View, Text, StyleSheet, TextInput } from "react-native";
 import { useUserStore } from "../lib/store/user-store";
 import { Link, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import { supabase } from "../lib/supabase/main";
+import Animated, {
+  useSharedValue,
+  withRepeat,
+  withTiming,
+  useAnimatedStyle,
+  Easing,
+  FadeOut,
+  FadeIn,
+} from "react-native-reanimated";
 
+const duration = 2000;
+const easing = Easing.bezier(0.25, -0.5, 0.25, 1);
 
 const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const [borderColor, setBorderColor] = useState("");
 
   const user = useUserStore((state: any) => state.user);
 
@@ -36,34 +45,46 @@ const Page = () => {
     router.replace("/");
   };
 
-  const handleFocus = () => {
-    setBorderColor("#6173F3");
-  };
-  const handleBlur = () => {
-    setBorderColor("lightgray");
-  };
+  const sv = useSharedValue(0);
 
-  if(loading){
+  useEffect(() => {
+    sv.value = withRepeat(withTiming(1, { duration, easing }), -1);
+  }, []);
 
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${sv.value * 360}deg` }],
+  }));
+
+  if (loading) {
     return (
-      <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
-        <Text>Loading...</Text>
-      </View>
-    )
+      <Animated.View
+        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+      >
+        <Animated.View style={[styles.box, animatedStyle]} />
+      </Animated.View>
+    );
   }
 
   return (
-    <View style={styles.container}>
+    <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.container}>
       <View style={styles.titleView}>
         <Ionicons name="log-in-outline" size={30} />
         <Text style={styles.loginText}>Login</Text>
       </View>
 
       <View style={styles.formStyle}>
+        <Text
+          style={{
+            fontSize: 25,
+            textAlign: "center",
+            fontWeight: "600",
+            color: "#6173F3",
+          }}
+        >
+          JUZA
+        </Text>
         <TextInput
           onChangeText={(text) => setEmail(text)}
-          onFocus={() => handleFocus}
-          onBlur={() => handleBlur}
           style={styles.inputStyle}
           placeholder="Please enter your email address"
           value={email}
@@ -76,10 +97,7 @@ const Page = () => {
           value={password}
           secureTextEntry={true}
         />
-        <Button
-          onPress={handleLogin}
-          style={styles.loginButtonStyle}
-        >
+        <Button onPress={handleLogin} style={styles.loginButtonStyle}>
           <Text style={styles.loginButtonText}>Log in</Text>
         </Button>
 
@@ -90,7 +108,7 @@ const Page = () => {
           </Link>
         </Text>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -151,6 +169,14 @@ const styles = StyleSheet.create({
   linkerText: {
     fontWeight: "500",
     color: "black",
+  },
+
+  box: {
+    height: 120,
+    width: 120,
+    backgroundColor: "#6173F3",
+
+    borderRadius: 50,
   },
 });
 
