@@ -50,6 +50,7 @@ const Layout = () => {
             },
             tabBarLabel: "Cart",
             unmountOnBlur: true,
+            
           }}
         />
 
