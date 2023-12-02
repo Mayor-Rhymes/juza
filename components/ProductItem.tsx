@@ -1,6 +1,7 @@
 import { View, StyleSheet, Image, Text, Pressable } from "react-native";
 import { ProductType } from "../lib/mock/fakeData";
 import { useRouter } from "expo-router";
+import Animated from "react-native-reanimated";
 
 interface ProductItemProps {
   product: ProductType;
@@ -16,7 +17,8 @@ const ProductItem = ({ product }: ProductItemProps) => {
   console.log(product.imagePath);
   return (
     <Pressable style={{ gap: 5 }} onPress={handleMove}>
-      <Image
+      <Animated.Image
+        sharedTransitionTag="productImage"
         source={product.imagePath}
         style={{ height: 150, width: 150, borderRadius: 10 }}
       />

@@ -8,15 +8,14 @@ import { useIsFocused } from "@react-navigation/native";
 import { useCartStore } from "../../lib/store/cart-store";
 import Animated, { FadeIn, FadeInDown, FadeOut } from "react-native-reanimated";
 
-
 const Page = () => {
-  const {addToCart, removeFromCart, cart} = useCartStore() as any;
+  const { addToCart, removeFromCart, cart } = useCartStore() as any;
   const [product, setProduct] = useState<ProductType | null>(null);
   const isFocused = useIsFocused();
   const { id } = useLocalSearchParams<{ id: string }>();
   console.log(id);
   console.log(12, Number(id));
-  console.log(cart)
+  console.log(cart);
   useEffect(() => {
     if (!product) {
       const foundProduct = products.find((p) => p.id.toString() === id);
@@ -28,10 +27,8 @@ const Page = () => {
   }, []);
 
   const handleAddToCart = () => {
-
-      addToCart(product);
-
-  }
+    addToCart(product);
+  };
 
   if (!product) {
     return (
@@ -42,8 +39,13 @@ const Page = () => {
     );
   }
   return (
-    <Animated.View entering={FadeInDown} exiting={FadeOut}  style={styles.otherContainer}>
-      <Image
+    <Animated.View
+      entering={FadeInDown}
+      exiting={FadeOut}
+      style={styles.otherContainer}
+    >
+      <Animated.Image
+        sharedTransitionTag="productImage"
         source={product.imagePath}
         style={{ height: 400, width: "100%", borderRadius: 20 }}
       />
@@ -83,7 +85,10 @@ const Page = () => {
         <Button style={[styles.buyButtonStyle, { flex: 1 }]}>
           <Text style={styles.buyButtonText}>Buy Now</Text>
         </Button>
-        <Button style={[styles.buyButtonStyle, styles.addToCartButton]} onPress={handleAddToCart}>
+        <Button
+          style={[styles.buyButtonStyle, styles.addToCartButton]}
+          onPress={handleAddToCart}
+        >
           <Ionicons name="cart" color="white" size={20} />
         </Button>
       </View>

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet, TextInput, Alert } from "react-native";
 import { useUserStore } from "../lib/store/user-store";
 import { Link, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -22,6 +22,7 @@ const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  
   const user = useUserStore((state: any) => state.user);
 
   console.log(user);
@@ -29,19 +30,24 @@ const Page = () => {
 
   const handleSignup = async () => {
     setLoading(true);
-    const { error, data } = await supabase.auth.signUp({
+    const { error, data: {session, user} } = await supabase.auth.signUp({
       email: email,
       password: password,
     });
 
     if (error) {
-      console.log(data);
+      console.log(error.message);
       console.log("problem don dey");
       setLoading(false);
       return;
     }
 
-    updateUser(data.user);
+
+    if(!session) {
+        Alert.alert("Please check your inbox for email verification.");
+    }
+
+    updateUser(user);
     router.replace("/");
   };
 

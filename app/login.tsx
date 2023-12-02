@@ -22,6 +22,8 @@ const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loginError, setLoginError] = useState(false);
+
 
   const user = useUserStore((state: any) => state.user);
 
@@ -38,6 +40,8 @@ const Page = () => {
       console.log(data);
       console.log(error.message);
       setLoading(false);
+      setLoginError(true);
+      
       return;
     }
 
@@ -90,6 +94,7 @@ const Page = () => {
           value={email}
           inputMode="email"
         />
+        
         <TextInput
           onChangeText={(text) => setPassword(text)}
           style={styles.inputStyle}
@@ -97,6 +102,9 @@ const Page = () => {
           value={password}
           secureTextEntry={true}
         />
+
+
+        {loginError && <Text style={{color: "red", fontSize: 13, textAlign: "center" }}>The login credentials are incorrect. Check to make sure your email and password are correct</Text>}
         <Button onPress={handleLogin} style={styles.loginButtonStyle}>
           <Text style={styles.loginButtonText}>Log in</Text>
         </Button>

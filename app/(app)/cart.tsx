@@ -1,16 +1,18 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TextInput } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { ProductTrack, useCartStore } from "../../lib/store/cart-store";
 import CartItem from "../../components/CartItem";
 import Button from "../../components/Button";
 import { Link } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import BottomSheet from "@gorhom/bottom-sheet";
+
 import Animated, {
   FadeInRight,
   FadeInUp,
   FadeOut,
   FadeOutLeft,
 } from "react-native-reanimated";
+import { useRef, useMemo, useCallback, useState } from "react";
 
 const cartImage = require("../../assets/images/empty-cart.png");
 
@@ -20,6 +22,8 @@ const Page = () => {
     resetCart: () => void;
   };
 
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+
   const getTotal = () => {
     let total = 0;
     for (let i of cart) {
@@ -28,6 +32,17 @@ const Page = () => {
 
     return total;
   };
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  // variables
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
   if (cart.length === 0) {
     return (
       <Animated.View
@@ -89,10 +104,52 @@ const Page = () => {
         >
           <Text style={styles.buyButtonText}>Empty Cart</Text>
         </Button>
-        <Button style={[styles.buyButtonStyle, { flex: 1 }]}>
+        <Button
+          style={[styles.buyButtonStyle, { flex: 1 }]}
+          onPress={() => setBottomSheetVisible(true)}
+        >
           <Text style={styles.buyButtonText}>Checkout</Text>
         </Button>
       </View>
+
+      {bottomSheetVisible && (
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={1}
+          snapPoints={snapPoints}
+          onChange={handleSheetChanges}
+        >
+          <View style={styles.contentContainer}>
+            <Text>Ready To Pay? 🎉</Text>
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="Please enter your address"
+              value=""
+            />
+            {/* <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                gap: 10,
+                alignItems: "center",
+              }}
+            > */}
+              <Button
+                style={[styles.buyButtonStyle]}
+                onPress={() => setBottomSheetVisible(false)}
+              >
+                <Text style={styles.buyButtonText}>Complete Your Purchase</Text>
+              </Button>
+              <Button
+                style={[styles.emptyButtonStyle]}
+                onPress={() => setBottomSheetVisible(false)}
+              >
+                <Text style={styles.buyButtonText}>Close Checkout Sheet</Text>
+              </Button>
+            {/* </View> */}
+          </View>
+        </BottomSheet>
+      )}
     </Animated.View>
   );
 };
@@ -141,6 +198,26 @@ const styles = StyleSheet.create({
 
   addToCartButton: {
     borderRadius: 400,
+  },
+
+  contentContainer: {
+    flex: 1,
+    // alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    gap: 20,
+    elevation: 5,
+    backgroundColor: "whitesmoke",
+  },
+
+  inputStyle: {
+    height: 60,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: "lightgrey",
+    paddingVertical: 7,
+    paddingHorizontal: 20,
+    fontSize: 16,
   },
 });
 
