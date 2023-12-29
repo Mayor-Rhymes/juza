@@ -4,7 +4,7 @@ export type ProductType2 = {
   id: number | string;
   name: string;
   price: number;
-  imagePath: string;
+  image: string;
 };
 export type ProductType = {
   id: number | string;

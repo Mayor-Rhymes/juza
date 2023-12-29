@@ -14,12 +14,12 @@ const ProductItem = ({ product }: ProductItemProps) => {
     router.push(`/(app)/${product.id}`);
   };
 
-  console.log(product.imagePath);
+  
   return (
     <Pressable style={{ gap: 5 }} onPress={handleMove}>
       <Animated.Image
         sharedTransitionTag="productImage"
-        src={product.imagePath}
+        source={{uri:product.image}}
         style={{ height: 150, width: 150, borderRadius: 10 }}
       />
       <Text style={{ fontSize: 20, fontWeight: "300", textTransform: "capitalize" }}>{product.name}</Text>

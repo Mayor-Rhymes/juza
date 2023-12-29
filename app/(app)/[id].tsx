@@ -18,10 +18,10 @@ const Page = () => {
 
   const getProduct = async () => {
 
-    let {data: product, error} = await supabase.from("products").select().eq('id', id);
+    let {data: products, error} = await supabase.from("products").select().eq('id', id);
     if(!error){
-      console.log(23, product);
-      setProduct(product);
+      console.log(23, products);
+      setProduct(products[0]!)
     }
     
   }
@@ -54,7 +54,7 @@ const Page = () => {
     >
       <Animated.Image
         sharedTransitionTag="productImage"
-        src={product.imagePath}
+        source={{uri:product.image}}
         style={{ height: 400, width: "100%", borderRadius: 20 }}
       />
       <View

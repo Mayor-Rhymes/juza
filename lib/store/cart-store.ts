@@ -1,13 +1,13 @@
 import { create } from "zustand";
-import { ProductType } from "../mock/fakeData";
+import { ProductType, ProductType2 } from "../mock/fakeData";
 
-export interface ProductTrack extends ProductType {
+export interface ProductTrack extends ProductType2 {
   count: number;
 }
 
 export const useCartStore = create((set) => ({
   cart: [],
-  addToCart: (product: ProductType) =>
+  addToCart: (product: ProductType2) =>
     set((state: any) => {
       const productExists = state.cart.find(
         (p: ProductTrack) => p.id === product.id
@@ -20,7 +20,7 @@ export const useCartStore = create((set) => ({
         return { cart: [...state.cart, { ...product, count: 1 }] };
       }
     }),
-  removeFromCart: (product: ProductType) =>
+  removeFromCart: (product: ProductType2) =>
     set((state: any) => {
       const productExists = state.cart.find(
         (p: ProductTrack) => p.id === product.id
@@ -38,7 +38,7 @@ export const useCartStore = create((set) => ({
       }
     }),
 
-  deleteFromCart: (product: ProductType) =>
+  deleteFromCart: (product: ProductType2) =>
     set((state: any) => {
       const newCart = state.cart.filter(
         (p: ProductTrack) => p.id !== product.id

@@ -14,7 +14,7 @@ const CartItem = ({ product }: ItemProps) => {
   return (
     <View style={styles.container}>
       <Image
-        source={product.imagePath}
+        source={{uri:product.image}}
         style={{ height: 100, width: 100, borderRadius: 20 }}
       />
       <View style={{ gap: 10 }}>
