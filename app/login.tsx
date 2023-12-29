@@ -46,6 +46,7 @@ const Page = () => {
     }
 
     updateUser(data.user);
+    setLoading(false);
     router.replace("/");
   };
 

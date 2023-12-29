@@ -28,7 +28,7 @@ const CartItem = ({ product }: ItemProps) => {
           {product.name}
         </Text>
         <Text style={{ fontSize: 16 }}>
-          UGX {(product.price * product.count).toPrecision(5)}
+          UGX {(product.price * product.count)}
         </Text>
         <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
           <AntDesign

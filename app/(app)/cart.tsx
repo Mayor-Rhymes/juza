@@ -87,7 +87,7 @@ const Page = () => {
           Total
         </Text>
         <Text style={{ fontSize: 20, fontWeight: "600", color: "#228b22" }}>
-          UGX {getTotal().toPrecision(5)}
+          UGX {getTotal()}
         </Text>
       </View>
       <View

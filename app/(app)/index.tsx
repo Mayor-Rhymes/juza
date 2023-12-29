@@ -1,15 +1,37 @@
 import { View, Text, StyleSheet, TextInput } from "react-native";
+import {useState, useEffect} from "react";
 import { useUserStore } from "../../lib/store/user-store";
-// import { supabase } from "../../lib/supabase/main";
+import { supabase } from "../../lib/supabase/main";
 // import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import ProductItem from "../../components/ProductItem";
 import { FlashList } from "@shopify/flash-list";
-import { products } from "../../lib/mock/fakeData";
+// import { products } from "../../lib/mock/fakeData";
+
 import Animated, { FadeIn, FadeInLeft, FadeOut } from "react-native-reanimated";
 const Page = () => {
   const user = useUserStore((state: any) => state.user);
-  console.log(user);
+  const [products, setProducts] = useState<any>([])
+
+  const getProducts = async () => {
+
+    let {data: products, error} = await supabase.from("products").select('*');
+    if(!error){
+      console.log(20, products?.length);
+      setProducts(products);
+    }
+    
+  }
+
+  console.log(25, products);
+  useEffect(() => {
+    if(products.length === 0){
+      getProducts();
+    }
+    
+
+  }, [])
+  console.log(34, user);
   return (
     <Animated.View entering={FadeInLeft} exiting={FadeOut} style={styles.container}>
       <View style={styles.userPane}>
@@ -38,7 +60,7 @@ const Page = () => {
         <Ionicons name="filter" size={20} color="#6173F3" style={{ flex: 1 }} />
       </View>
 
-      <FlashList
+      {products.length > 0 && <FlashList
         data={products}
         renderItem={({ item }) => <ProductItem product={item} />}
         estimatedItemSize={products.length}
@@ -48,7 +70,7 @@ const Page = () => {
         centerContent={true}
         ItemSeparatorComponent={() => <View style={{width: 30, height: 30}}/>}
         
-      />
+      />}
     </Animated.View>
   );
 };

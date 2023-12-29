@@ -1,28 +1,36 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { ProductType, products } from "../../lib/mock/fakeData";
+import { ProductType, ProductType2, products } from "../../lib/mock/fakeData";
 import Button from "../../components/Button";
 import { Ionicons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import { useCartStore } from "../../lib/store/cart-store";
 import Animated, { FadeIn, FadeInDown, FadeOut } from "react-native-reanimated";
+import { supabase } from "../../lib/supabase/main";
 
 const Page = () => {
   const { addToCart, removeFromCart, cart } = useCartStore() as any;
-  const [product, setProduct] = useState<ProductType | null>(null);
+  const [product, setProduct] = useState<ProductType2 | null>(null);
   const isFocused = useIsFocused();
   const { id } = useLocalSearchParams<{ id: string }>();
+
+
+  const getProduct = async () => {
+
+    let {data: product, error} = await supabase.from("products").select().eq('id', id);
+    if(!error){
+      console.log(23, product);
+      setProduct(product);
+    }
+    
+  }
   console.log(id);
   console.log(12, Number(id));
   console.log(cart);
   useEffect(() => {
     if (!product) {
-      const foundProduct = products.find((p) => p.id.toString() === id);
-      console.log(foundProduct);
-      if (foundProduct) {
-        setProduct(foundProduct);
-      }
+      getProduct();
     }
   }, []);
 
@@ -46,7 +54,7 @@ const Page = () => {
     >
       <Animated.Image
         sharedTransitionTag="productImage"
-        source={product.imagePath}
+        src={product.imagePath}
         style={{ height: 400, width: "100%", borderRadius: 20 }}
       />
       <View
@@ -64,10 +72,10 @@ const Page = () => {
             fontWeight: "700",
           }}
         >
-          {product.name}
+          {product?.name}
         </Text>
         <Text style={{ fontSize: 15, fontWeight: "700" }}>
-          UGX {product.price}
+          UGX {product?.price}
         </Text>
       </View>
 

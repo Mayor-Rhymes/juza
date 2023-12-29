@@ -1,10 +1,10 @@
 import { View, StyleSheet, Image, Text, Pressable } from "react-native";
-import { ProductType } from "../lib/mock/fakeData";
+import { ProductType2 } from "../lib/mock/fakeData";
 import { useRouter } from "expo-router";
 import Animated from "react-native-reanimated";
 
 interface ProductItemProps {
-  product: ProductType;
+  product: ProductType2;
 }
 
 const ProductItem = ({ product }: ProductItemProps) => {
@@ -19,7 +19,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
     <Pressable style={{ gap: 5 }} onPress={handleMove}>
       <Animated.Image
         sharedTransitionTag="productImage"
-        source={product.imagePath}
+        src={product.imagePath}
         style={{ height: 150, width: 150, borderRadius: 10 }}
       />
       <Text style={{ fontSize: 20, fontWeight: "300", textTransform: "capitalize" }}>{product.name}</Text>
