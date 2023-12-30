@@ -18,10 +18,12 @@ const Page = () => {
 
   const getProduct = async () => {
 
-    let {data: products, error} = await supabase.from("products").select().eq('id', id);
+    let {data: products, error} = await supabase.from("Products").select().eq('id', id);
     if(!error){
       console.log(23, products);
       setProduct(products[0]!)
+    } else {
+      console.log(error);
     }
     
   }
