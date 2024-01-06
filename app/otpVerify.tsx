@@ -19,9 +19,8 @@ const duration = 2000;
 const easing = Easing.bezier(0.25, -0.5, 0.25, 1);
 
 const Page = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
+  
+  const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState(false);
 
@@ -30,63 +29,79 @@ const Page = () => {
   console.log(user);
   const updateUser = useUserStore((state: any) => state.updateUser);
 
-  const handleLogin = async () => {
-    setLoading(true);
-    const { error, data } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
+//   const handleLogin = async () => {
+//     setLoading(true);
+//     const { error, data } = await supabase.auth.signInWithPassword({
+//       email: email,
+//       password: password,
+//     });
 
-    // const { error, data } = await supabase.auth.signInWithOtp({
-    //   phone: email,
-    // });
+//     // const { error, data } = await supabase.auth.signInWithOtp({
+//     //   phone: email,
+//     // });
 
-    if (error) {
-      console.log(data);
-      console.log(error.message);
-      setLoading(false);
-      setLoginError(true);
+//     if (error) {
+//       console.log(data);
+//       console.log(error.message);
+//       setLoading(false);
+//       setLoginError(true);
 
-      return;
-    }
+//       return;
+//     }
 
-    updateUser(data.user);
-    setLoading(false);
-    router.replace("/");
-  };
+//     updateUser(data.user);
+//     setLoading(false);
+//     router.replace("/");
+//   };
 
-  const handlePhoneLogin = async () => {
-    const { error, data } = await supabase.auth.signInWithOtp({
-      phone: phone,
-    });
+//   const handlePhoneLogin = async () => {
+//     const { error, data } = await supabase.auth.signInWithOtp({
+//       phone: phone,
+//     });
 
-    if (error) {
-      console.log(error);
+//     if (error) {
+//       console.log(error);
+//     } else {
+//       console.log(data);
+//     }
+//   };
+
+  const handleOtpVerification = async () => {
+    const {data, error} = await supabase.auth.verifyOtp({
+        phone: "256700624973",
+        token: "123456",
+        type: "sms",
+    })
+
+    if(error){
+        console.log(error);
     } else {
-      console.log(data);
-      router.push("/otpVerify");
+        console.log(data);
+        updateUser(data.user);
+        router.replace('/');
     }
-  };
 
-  const sv = useSharedValue(0);
-
-  useEffect(() => {
-    sv.value = withRepeat(withTiming(1, { duration, easing }), -1);
-  }, []);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${sv.value * 360}deg` }],
-  }));
-
-  if (loading) {
-    return (
-      <Animated.View
-        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-      >
-        <Animated.View style={[styles.box, animatedStyle]} />
-      </Animated.View>
-    );
   }
+
+//   const sv = useSharedValue(0);
+
+//   useEffect(() => {
+//     sv.value = withRepeat(withTiming(1, { duration, easing }), -1);
+//   }, []);
+
+//   const animatedStyle = useAnimatedStyle(() => ({
+//     transform: [{ rotate: `${sv.value * 360}deg` }],
+//   }));
+
+//   if (loading) {
+//     return (
+//       <Animated.View
+//         style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+//       >
+//         <Animated.View style={[styles.box, animatedStyle]} />
+//       </Animated.View>
+//     );
+//   }
 
   return (
     <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.container}>
@@ -106,28 +121,15 @@ const Page = () => {
         >
           JUZA
         </Text>
-        {/* <TextInput
-          onChangeText={(text) => setEmail(text)}
-          style={styles.inputStyle}
-          placeholder="Please enter your email address"
-          value={email}
-          inputMode="email"
-        /> */}
+       
         <TextInput
-          onChangeText={(text) => setPhone(text)}
+          onChangeText={(text) => setOtp(text)}
           style={styles.inputStyle}
-          placeholder="Please enter your phone number"
-          value={phone}
-          inputMode="tel"
+          placeholder="Please enter your otp"
+          value={otp}
+          inputMode="numeric"
         />
 
-        {/* <TextInput
-          onChangeText={(text) => setPassword(text)}
-          style={styles.inputStyle}
-          placeholder="Please enter your password"
-          value={password}
-          secureTextEntry={true}
-        /> */}
 
         {loginError && (
           <Text style={{ color: "red", fontSize: 13, textAlign: "center" }}>
@@ -135,7 +137,7 @@ const Page = () => {
             and password are correct
           </Text>
         )}
-        <Button onPress={handlePhoneLogin} style={styles.loginButtonStyle}>
+        <Button onPress={handleOtpVerification} style={styles.loginButtonStyle}>
           <Text style={styles.loginButtonText}>Log in</Text>
         </Button>
 

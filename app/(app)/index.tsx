@@ -51,7 +51,7 @@ const Page = () => {
       style={styles.container}
     >
       <View style={styles.userPane}>
-        <Text>Hello {user.email}</Text>
+        <Text>Hello</Text>
       </View>
 
       <View style={{ flexDirection: "row", justifyContent: "space-evenly", gap: 10 }}>
