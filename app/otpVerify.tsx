@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import { useUserStore } from "../lib/store/user-store";
+import { usePhoneStore } from "../lib/store/phone-store";
 import { Link, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
@@ -25,8 +26,10 @@ const Page = () => {
   const [loginError, setLoginError] = useState(false);
 
   const user = useUserStore((state: any) => state.user);
+  const phone = usePhoneStore((state: any) => state.phone);
 
   console.log(user);
+  console.log(phone);
   const updateUser = useUserStore((state: any) => state.updateUser);
 
 //   const handleLogin = async () => {
@@ -68,15 +71,18 @@ const Page = () => {
 
   const handleOtpVerification = async () => {
     const {data, error} = await supabase.auth.verifyOtp({
-        phone: "256700624973",
-        token: "123456",
+        phone: phone,
+        token: otp,
         type: "sms",
     })
 
     if(error){
         console.log(error);
+        console.log(otp);
+        console.log(phone)
     } else {
         console.log(data);
+        console.log(otp);
         updateUser(data.user);
         router.replace('/');
     }
@@ -127,7 +133,7 @@ const Page = () => {
           style={styles.inputStyle}
           placeholder="Please enter your otp"
           value={otp}
-          inputMode="numeric"
+        //   inputMode="numeric"
         />
 
 
@@ -138,15 +144,15 @@ const Page = () => {
           </Text>
         )}
         <Button onPress={handleOtpVerification} style={styles.loginButtonStyle}>
-          <Text style={styles.loginButtonText}>Log in</Text>
+          <Text style={styles.loginButtonText}>Verify OTP</Text>
         </Button>
 
-        <Text style={styles.suggestionText}>
+        {/* <Text style={styles.suggestionText}>
           Don't have an account?{" "}
           <Link href="/register" asChild>
             <Text style={styles.linkerText}>Sign up</Text>
           </Link>
-        </Text>
+        </Text> */}
       </View>
     </Animated.View>
   );

@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import { useUserStore } from "../lib/store/user-store";
+import { usePhoneStore } from "../lib/store/phone-store";
 import { Link, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
@@ -26,6 +27,7 @@ const Page = () => {
   const [loginError, setLoginError] = useState(false);
 
   const user = useUserStore((state: any) => state.user);
+  const updatePhone = usePhoneStore((state: any) => state.updatePhone);
 
   console.log(user);
   const updateUser = useUserStore((state: any) => state.updateUser);
@@ -64,7 +66,8 @@ const Page = () => {
       console.log(error);
     } else {
       console.log(data);
-      router.push("/otpVerify");
+      updatePhone(phone);
+      router.push("/otpVerify", );
     }
   };
 
@@ -136,15 +139,15 @@ const Page = () => {
           </Text>
         )}
         <Button onPress={handlePhoneLogin} style={styles.loginButtonStyle}>
-          <Text style={styles.loginButtonText}>Log in</Text>
+          <Text style={styles.loginButtonText}>Send OTP</Text>
         </Button>
 
-        <Text style={styles.suggestionText}>
+        {/* <Text style={styles.suggestionText}>
           Don't have an account?{" "}
           <Link href="/register" asChild>
             <Text style={styles.linkerText}>Sign up</Text>
           </Link>
-        </Text>
+        </Text> */}
       </View>
     </Animated.View>
   );
