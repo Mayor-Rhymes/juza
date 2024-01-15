@@ -39,10 +39,7 @@ const Page = () => {
       password: password,
     });
 
-    // const { error, data } = await supabase.auth.signInWithOtp({
-    //   phone: email,
-    // });
-
+   
     if (error) {
       console.log(data);
       console.log(error.message);
@@ -109,28 +106,28 @@ const Page = () => {
         >
           JUZA
         </Text>
-        {/* <TextInput
+        <TextInput
           onChangeText={(text) => setEmail(text)}
           style={styles.inputStyle}
           placeholder="Please enter your email address"
           value={email}
           inputMode="email"
-        /> */}
-        <TextInput
+        />
+        {/* <TextInput
           onChangeText={(text) => setPhone(text)}
           style={styles.inputStyle}
           placeholder="Please enter your phone number"
           value={phone}
           inputMode="tel"
-        />
+        /> */}
 
-        {/* <TextInput
+        <TextInput
           onChangeText={(text) => setPassword(text)}
           style={styles.inputStyle}
           placeholder="Please enter your password"
           value={password}
           secureTextEntry={true}
-        /> */}
+        />
 
         {loginError && (
           <Text style={{ color: "red", fontSize: 13, textAlign: "center" }}>
@@ -138,16 +135,19 @@ const Page = () => {
             and password are correct
           </Text>
         )}
-        <Button onPress={handlePhoneLogin} style={styles.loginButtonStyle}>
+        {/* <Button onPress={handlePhoneLogin} style={styles.loginButtonStyle}>
           <Text style={styles.loginButtonText}>Send OTP</Text>
+        </Button> */}
+        <Button onPress={handleLogin} style={styles.loginButtonStyle}>
+          <Text style={styles.loginButtonText}>Login</Text>
         </Button>
 
-        {/* <Text style={styles.suggestionText}>
+        <Text style={styles.suggestionText}>
           Don't have an account?{" "}
           <Link href="/register" asChild>
             <Text style={styles.linkerText}>Sign up</Text>
           </Link>
-        </Text> */}
+        </Text>
       </View>
     </Animated.View>
   );
