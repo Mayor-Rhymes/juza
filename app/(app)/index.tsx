@@ -22,7 +22,7 @@ const Page = () => {
     let { data: products, error } = await supabase.from("Products").select("*");
     if (!error) {
       console.log(20, products?.length);
-      setProducts(products);
+      setProducts(products as ProductType2[]);
     }
   };
 
@@ -30,7 +30,7 @@ const Page = () => {
     let { data: refills, error } = await supabase.from("Refill").select("*");
     if (!error) {
       console.log(30, refills?.length);
-      setRefillProducts(refills);
+      setRefillProducts(refills as ProductType2[]);
     }
   };
 

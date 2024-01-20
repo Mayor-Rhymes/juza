@@ -1,18 +1,16 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { ProductType, ProductType2, products } from "../../lib/mock/fakeData";
+import { ProductType2 } from "../../lib/mock/fakeData";
 import Button from "../../components/Button";
 import { Ionicons } from "@expo/vector-icons";
-import { useIsFocused } from "@react-navigation/native";
 import { useCartStore } from "../../lib/store/cart-store";
-import Animated, { FadeIn, FadeInDown, FadeOut } from "react-native-reanimated";
+import Animated, { FadeInDown, FadeOut } from "react-native-reanimated";
 import { supabase } from "../../lib/supabase/main";
 
 const Page = () => {
-  const { addToCart, removeFromCart, cart } = useCartStore() as any;
+  const { addToCart, cart } = useCartStore() as any;
   const [product, setProduct] = useState<ProductType2 | null>(null);
-  const isFocused = useIsFocused();
   const { id } = useLocalSearchParams<{ id: string }>();
 
 
@@ -21,7 +19,7 @@ const Page = () => {
     let {data: products, error} = await supabase.from("Products").select().eq('id', id);
     if(!error){
       console.log(23, products);
-      setProduct(products[0]!)
+      setProduct(products![0])
     } else {
       console.log(error);
     }
