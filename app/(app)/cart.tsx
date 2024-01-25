@@ -4,7 +4,9 @@ import { ProductTrack, useCartStore } from "../../lib/store/cart-store";
 import CartItem from "../../components/CartItem";
 import Button from "../../components/Button";
 import { Link } from "expo-router";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { supabase } from "../../lib/supabase/main";
+import { useRouter } from "expo-router";
 
 import Animated, {
   FadeInRight,
@@ -13,6 +15,7 @@ import Animated, {
   FadeOutLeft,
 } from "react-native-reanimated";
 import { useRef, useMemo, useCallback, useState } from "react";
+import { useUserStore } from "../../lib/store/user-store";
 
 const cartImage = require("../../assets/images/empty-cart.png");
 
@@ -21,6 +24,12 @@ const Page = () => {
     cart: ProductTrack[];
     resetCart: () => void;
   };
+
+  const router = useRouter();
+  const user = useUserStore((state: any) => state.user);
+
+  const [address, setAddress] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 
@@ -42,6 +51,32 @@ const Page = () => {
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
+
+  const handlePurchase = async () => {
+    if (phoneNumber && address) {
+      const { data, error } = await supabase.from("Purchase_Orders").insert([
+        {
+          phone_number: phoneNumber,
+          email: user.email,
+          order_information: JSON.stringify(cart),
+        },
+      ]);
+
+      if (error) {
+        console.log("There was an error");
+        return;
+      }
+      resetCart();
+      router.replace("/");
+    } else {
+      console.log("Please enter credentials");
+    }
+  };
+
+  //checkout button handler
+  const handleCheckout = async () => {
+    setBottomSheetVisible(true);
+  };
 
   if (cart.length === 0) {
     return (
@@ -106,7 +141,7 @@ const Page = () => {
         </Button>
         <Button
           style={[styles.buyButtonStyle, { flex: 1 }]}
-          onPress={() => setBottomSheetVisible(true)}
+          onPress={handleCheckout}
         >
           <Text style={styles.buyButtonText}>Checkout</Text>
         </Button>
@@ -121,10 +156,17 @@ const Page = () => {
         >
           <View style={styles.contentContainer}>
             <Text>Ready To Pay? 🎉</Text>
-            <TextInput
+            <BottomSheetTextInput
               style={styles.inputStyle}
               placeholder="Please enter your address"
-              value=""
+              value={address}
+              onChangeText={setAddress}
+            />
+            <BottomSheetTextInput
+              style={styles.inputStyle}
+              placeholder="Please enter your phone number"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
             />
             {/* <View
               style={{
@@ -134,18 +176,15 @@ const Page = () => {
                 alignItems: "center",
               }}
             > */}
-              <Button
-                style={[styles.buyButtonStyle]}
-                onPress={() => setBottomSheetVisible(false)}
-              >
-                <Text style={styles.buyButtonText}>Complete Your Purchase</Text>
-              </Button>
-              <Button
-                style={[styles.emptyButtonStyle]}
-                onPress={() => setBottomSheetVisible(false)}
-              >
-                <Text style={styles.buyButtonText}>Close Checkout Sheet</Text>
-              </Button>
+            <Button style={[styles.buyButtonStyle]} onPress={handlePurchase}>
+              <Text style={styles.buyButtonText}>Complete Your Purchase</Text>
+            </Button>
+            <Button
+              style={[styles.emptyButtonStyle]}
+              onPress={() => setBottomSheetVisible(false)}
+            >
+              <Text style={styles.buyButtonText}>Close Checkout Sheet</Text>
+            </Button>
             {/* </View> */}
           </View>
         </BottomSheet>
@@ -208,6 +247,8 @@ const styles = StyleSheet.create({
     gap: 20,
     elevation: 5,
     backgroundColor: "whitesmoke",
+    height: 400,
+    paddingVertical: 20,
   },
 
   inputStyle: {

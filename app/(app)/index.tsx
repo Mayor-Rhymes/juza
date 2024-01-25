@@ -34,13 +34,11 @@ const Page = () => {
     }
   };
 
-
-  
   console.log(25, products);
   useEffect(() => {
     if (products.length === 0 && refillProducts.length === 0) {
       getProducts();
-      getRefillProducts()
+      getRefillProducts();
     }
   }, []);
   console.log(34, user);
@@ -54,10 +52,39 @@ const Page = () => {
         <Text>Hello</Text>
       </View>
 
-      <View style={{ flexDirection: "row", justifyContent: "space-evenly", gap: 10 }}>
-        <Button style={{flex: 1, flexDirection: "row", justifyContent: "center", padding: 10, borderRadius: 5, backgroundColor: `${showRefill ? "#9173FF" : "whitesmoke"}`}} onPress={() => setShowRefill(true)}><Text>Refill</Text></Button>
-        <Button style={{flex: 1, flexDirection: "row", justifyContent: "center", padding: 10, borderRadius: 5, backgroundColor: `${!showRefill ? "#9173FF" : "whitesmoke"}`}} onPress={() => setShowRefill(false)}><Text>Purchase</Text></Button>
-        
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          gap: 10,
+        }}
+      >
+        <Button
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "center",
+            padding: 10,
+            borderRadius: 5,
+            backgroundColor: `${showRefill ? "#9173FF" : "whitesmoke"}`,
+          }}
+          onPress={() => setShowRefill(true)}
+        >
+          <Text>Refill</Text>
+        </Button>
+        <Button
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "center",
+            padding: 10,
+            borderRadius: 5,
+            backgroundColor: `${!showRefill ? "#9173FF" : "whitesmoke"}`,
+          }}
+          onPress={() => setShowRefill(false)}
+        >
+          <Text>Purchase</Text>
+        </Button>
       </View>
 
       {/* <View
@@ -82,7 +109,7 @@ const Page = () => {
         <Ionicons name="filter" size={20} color="#6173F3" style={{ flex: 1 }} />
       </View> */}
 
-      {showRefill && (refillProducts.length > 0 && (
+      {showRefill && refillProducts.length > 0 && (
         <FlashList
           data={refillProducts}
           renderItem={({ item }) => <RefillProductItem product={item} />}
@@ -95,8 +122,8 @@ const Page = () => {
             <View style={{ width: 30, height: 30 }} />
           )}
         />
-        ))}
-      {!showRefill && (products.length > 0 && (
+      )}
+      {!showRefill && products.length > 0 && (
         <FlashList
           data={products}
           renderItem={({ item }) => <ProductItem product={item} />}
@@ -109,7 +136,7 @@ const Page = () => {
             <View style={{ width: 30, height: 30 }} />
           )}
         />
-      ))}
+      )}
     </Animated.View>
   );
 };
