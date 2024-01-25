@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ToastAndroid } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { ProductType2 } from "../../lib/mock/fakeData";
@@ -40,7 +40,7 @@ const Page = () => {
   console.log(id);
   console.log(12, Number(id));
   console.log(cart);
-  
+
   useEffect(() => {
     if (!product) {
       getProduct();
@@ -55,6 +55,7 @@ const Page = () => {
 
   const handleAddToCart = () => {
     addToCart(product);
+    ToastAndroid.show("Product has been added to cart", ToastAndroid.SHORT);
   };
 
   if (loading) {
@@ -111,13 +112,14 @@ const Page = () => {
             alignItems: "center",
           }}
         >
-          <Button style={[styles.buyButtonStyle, { flex: 1 }]}>
+          {/* <Button style={[styles.buyButtonStyle, { flex: 1 }]}>
             <Text style={styles.buyButtonText}>Buy Now</Text>
-          </Button>
+          </Button> */}
           <Button
-            style={[styles.buyButtonStyle, styles.addToCartButton]}
+            style={[styles.buyButtonStyle, { flex: 1 }]}
             onPress={handleAddToCart}
           >
+            <Text style={{color: "white", fontWeight: "800",}}>Add To Cart</Text>
             <Ionicons name="cart" color="white" size={20} />
           </Button>
         </View>
@@ -145,6 +147,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#6173F3",
     alignItems: "center",
     borderRadius: 30,
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 10,
   },
 
   buyButtonText: {
