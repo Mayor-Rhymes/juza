@@ -1,4 +1,11 @@
-import { View, StyleSheet, Image, Text, Pressable } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  ToastAndroid,
+} from "react-native";
 import { ProductType2 } from "../lib/mock/fakeData";
 import { useRouter } from "expo-router";
 import Animated from "react-native-reanimated";
@@ -18,33 +25,45 @@ const RefillProductItem = ({ product }: ProductItemProps) => {
     router.push(`/(app)/${product.id}`);
   };
 
-
   const handleRefill = async () => {
-
-    const {data, error} = await supabase.from("refill_orders").insert([{
+    const { data, error } = await supabase.from("refill_orders").insert([
+      {
         information: JSON.stringify(product),
-        user_info: user.email
-    }])
+        user_info: user.email,
+      },
+    ]);
 
-    if(!error){
-        console.log(data);
+    if (!error) {
+      ToastAndroid.show("Refill order has been made", ToastAndroid.SHORT);
+      return;
     } else {
-        console.log(error);
+      ToastAndroid.show("There was an issue", ToastAndroid.SHORT);
     }
-  }
+  };
 
-  
   return (
     <Pressable style={{ gap: 5 }} onPress={handleMove}>
       <Animated.Image
         sharedTransitionTag="productImage"
-        source={{uri:product.image}}
+        source={{ uri: product.image }}
         style={{ height: 150, width: 150, borderRadius: 10 }}
       />
-      <Text style={{ fontSize: 20, fontWeight: "300", textTransform: "capitalize" }}>{product.name}</Text>
+      <Text
+        style={{ fontSize: 20, fontWeight: "300", textTransform: "capitalize" }}
+      >
+        {product.name}
+      </Text>
       <Text style={{ fontWeight: "400" }}>UGX {product.price}</Text>
-      <Button onPress={handleRefill} style={{padding: 10, backgroundColor: "#6173F3", borderRadius: 10, alignItems: "center"}}>
-        <Text style={{color: "white"}}>Refill</Text>
+      <Button
+        onPress={handleRefill}
+        style={{
+          padding: 10,
+          backgroundColor: "#6173F3",
+          borderRadius: 10,
+          alignItems: "center",
+        }}
+      >
+        <Text style={{ color: "white" }}>Refill</Text>
       </Button>
     </Pressable>
   );
