@@ -59,6 +59,7 @@ const Page = () => {
           phone_number: phoneNumber,
           email: user.email,
           order_information: JSON.stringify(cart),
+          address: address,
         },
       ]);
 
